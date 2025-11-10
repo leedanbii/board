@@ -29,4 +29,10 @@ public class User {
 
     @Column(nullable = false)
     private String name;
+
+    public User(String userId, String password, String name) {
+        this.userId = userId;
+        this.password = password;
+        this.name = name;
+    }
 }
