@@ -21,13 +21,7 @@ public class UserController {
 
     @PostMapping("/register")
     public String register(UserRegisterForm form) {
-        User user = new User();
-        user.setUserId(form.getUserId());
-        user.setPassword(form.getUserPassword());
-        user.setName(form.getUserName());
-
-        userService.register(user);
-
+        userService.register(form);
         return "redirect:/";
     }
 
