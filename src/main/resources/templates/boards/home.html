@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>게시판</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        a, button {
+            margin-right: 15px;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+        }
+        a {
+            background-color: #1a73e8;
+            color: white;
+        }
+        a:hover {
+            background-color: #1665c1;
+        }
+        button {
+            background-color: #f44336;
+            color: white;
+        }
+        button:hover {
+            background-color: #d32f2f;
+        }
+        form {
+            display: inline;
+        }
+    </style>
+</head>
+<body>
+<h1 th:text="|환영합니다, ${username}님!|"></h1>
+<a href="/boards/list">게시글 목록 보기</a>
+<a href="/boards/new">게시글 작성하기</a>
+<form action="/users/logout" method="post">
+    <button type="submit">로그아웃</button>
+</form>
+</body>
+</html>
