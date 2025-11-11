@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>게시글 목록</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%; /* 화면 가득 */
+            border-collapse: collapse; /* 테두리 겹침 제거 */
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        /* 열별 비율 */
+        th:nth-child(1), td:nth-child(1) { width: 5%; }   /* ID */
+        th:nth-child(2), td:nth-child(2) { width: 50%; }  /* 제목 */
+        th:nth-child(3), td:nth-child(3) { width: 20%; }  /* 작성자 */
+        th:nth-child(4), td:nth-child(4) { width: 25%; }  /* 작성일 */
+
+        a {
+            color: #1a73e8;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        h1 {
+            margin-bottom: 15px;
+        }
+        .btn {
+            display: inline-block;
+            margin-bottom: 15px;
+            padding: 6px 12px;
+            background-color: #1a73e8;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .btn:hover {
+            background-color: #1665c1;
+        }
+    </style>
+</head>
+<body>
+<h1>게시글 목록</h1>
+<a class="btn" href="/boards/new">새 글 작성</a>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>제목</th>
+        <th>작성자</th>
+        <th>작성일</th>
+    </tr>
+    <tr th:each="board : ${boards}">
+        <td th:text="${board.id}"></td>
+        <td><a th:href="@{'/boards/' + ${board.id}}" th:text="${board.title}"></a></td>
+        <td th:text="${board.writer.getName()}"></td>
+        <td th:text="${#temporals.format(board.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+    </tr>
+</table>
+<a class="btn" href="/boards">홈으로</a>
+</body>
+</html>

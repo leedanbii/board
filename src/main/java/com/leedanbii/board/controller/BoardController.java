@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -35,6 +36,12 @@ public class BoardController {
         return "boards/form";
     }
 
+    @GetMapping("/list")
+    public String getAllBoards(Model model) {
+        model.addAttribute("boards", boardService.getAllBoards());
+        return "boards/list";
+    }
+
     @PostMapping("/new")
     public String createBoard(BoardForm form, HttpSession session) {
         User loginUser = (User) session.getAttribute("loginUser");
@@ -44,5 +51,11 @@ public class BoardController {
 
         boardService.createBoard(form, loginUser);
         return "redirect:/boards/list";
+    }
+
+    @GetMapping("/{id}")
+    public String detail(@PathVariable Long id, Model model) {
+        model.addAttribute("board", boardService.getBoard(id));
+        return "boards/detail";
     }
 }
