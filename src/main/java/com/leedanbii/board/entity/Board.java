@@ -39,9 +39,13 @@ public class Board {
     @JoinColumn(name = "user_id", nullable = false)
     private User writer;
 
-    public Board(String title, String content, User writer) {
+    private Board(String title, String content, User writer) {
         this.title = title;
         this.content = content;
         this.writer = writer;
+    }
+
+    public static Board of(String title, String content, User writer) {
+        return new Board(title, content, writer);
     }
 }
