@@ -18,7 +18,7 @@
         hr {
             margin: 20px 0;
         }
-        a {
+        a, button.btn {
             display: inline-block;
             margin-top: 20px;
             text-decoration: none;
@@ -27,9 +27,17 @@
             padding: 8px 15px;
             border-radius: 5px;
             font-size: 16px;
+            border: none;
+            cursor: pointer;
         }
-        a:hover {
+        a:hover, button.btn:hover {
             background-color: #1665c1;
+        }
+        .btn-delete {
+            background-color: #e84545;
+        }
+        .btn-delete:hover {
+            background-color: #c12b2b;
         }
     </style>
 </head>
@@ -39,6 +47,13 @@
 <p>작성일: <span th:text="${#temporals.format(board.createdAt, 'yyyy-MM-dd HH:mm')}">작성일</span></p>
 <hr>
 <p th:text="${board.content}">게시글 내용</p>
+
+<a th:href="@{/boards/{id}/update(id=${board.id})}" class="btn">수정</a>
+
+<form th:action="@{/boards/{id}/delete(id=${board.id})}" method="post" style="display:inline;">
+    <input type="hidden" name="_method" value="delete">
+    <button type="submit" class="btn btn-delete">삭제</button>
+</form>
 
 <a href="/boards/list">목록으로</a>
 </body>

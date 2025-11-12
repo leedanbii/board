@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>게시글 작성</title>
+    <title>게시글 수정</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -52,15 +52,16 @@
     </style>
 </head>
 <body>
-<h1>게시글 작성</h1>
-<form action="/boards/new" method="post">
+<h1>게시글 수정</h1>
+<form th:action="@{'/boards/' + ${board.id} + '/update'}" method="post">
     <label for="boardTitle">제목</label>
-    <input type="text" id="boardTitle" name="boardTitle" required>
+    <input type="text" id="boardTitle" name="boardTitle" th:value="${board.title}" required>
 
     <label for="boardContent">내용</label>
-    <textarea id="boardContent" name="boardContent" rows="20" required></textarea>
+    <textarea id="boardContent" name="boardContent" rows="20" required
+              th:text="${board.content}"></textarea>
 
-    <input type="submit" value="작성">
+    <input type="submit" value="수정">
 </form>
 <a class="btn" href="/boards/list">목록으로</a>
 </body>

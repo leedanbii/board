@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class BoardForm {
+public class BoardUpdateForm {
     private String boardTitle;
     private String boardContent;
 }

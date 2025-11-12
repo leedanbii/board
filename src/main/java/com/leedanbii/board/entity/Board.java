@@ -48,4 +48,9 @@ public class Board {
     public static Board of(String title, String content, User writer) {
         return new Board(title, content, writer);
     }
+
+    public void update(String newTitle, String newContent) {
+        this.title = newTitle;
+        this.content = newContent;
+    }
 }
