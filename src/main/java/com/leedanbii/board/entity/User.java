@@ -30,9 +30,13 @@ public class User {
     @Column(nullable = false)
     private String name;
 
-    public User(String userId, String password, String name) {
+    private User(String userId, String password, String name) {
         this.userId = userId;
         this.password = password;
         this.name = name;
+    }
+
+    public static User of(String userId, String password, String name) {
+        return new User(userId, password, name);
     }
 }

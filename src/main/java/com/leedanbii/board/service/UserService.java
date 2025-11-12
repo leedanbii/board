@@ -4,10 +4,17 @@ import com.leedanbii.board.dto.UserLoginForm;
 import com.leedanbii.board.dto.UserRegisterForm;
 import com.leedanbii.board.entity.User;
 import com.leedanbii.board.repository.UserRepository;
+import com.leedanbii.board.util.ValidationUtils;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
+
+    private static final int NAME_LENGTH_MAX = 5;
+    private static final String ERROR_NAME_TOO_LONG = "이름은 %d자 이하만 가능합니다.";
+    private static final String ERROR_DUPLICATE_USER_ID = "이미 존재하는 사용자 아이디입니다.";
+    private static final String ERROR_USER_NOT_FOUND = "존재하지 않는 아이디입니다.";
+    private static final String ERROR_INVALID_PASSWORD = "비밀번호가 올바르지 않습니다.";
 
     private final UserRepository userRepository;
 
@@ -16,10 +23,11 @@ public class UserService {
     }
 
     public User register(UserRegisterForm form) {
+        ValidationUtils.validateNotBlank(form.getUserId(), form.getUserPassword(), form.getUserName());
         validateUserForm(form);
         checkDuplicateUserId(form.getUserId());
 
-        User user = new User(form.getUserId(), form.getUserPassword(), form.getUserName());
+        User user = User.of(form.getUserId(), form.getUserPassword(), form.getUserName());
         return userRepository.save(user);
     }
 
@@ -32,39 +40,29 @@ public class UserService {
     }
 
     private void validateUserForm(UserRegisterForm form) {
-        validateNotBlank(form.getUserId(), form.getUserPassword(), form.getUserName());
-
-        if (form.getUserName().length() > 5) {
-            throw new IllegalArgumentException("이름은 5자 이하만 가능합니다.");
+        if (form.getUserName().length() > NAME_LENGTH_MAX) {
+            throw new IllegalArgumentException(String.format(ERROR_NAME_TOO_LONG, NAME_LENGTH_MAX));
         }
     }
 
     private void checkDuplicateUserId(String userId) {
         if (userRepository.findByUserId(userId).isPresent()) {
-            throw new IllegalArgumentException("이미 존재하는 사용자 아이디입니다.");
+            throw new IllegalArgumentException(ERROR_DUPLICATE_USER_ID);
         }
     }
 
-    private void validateLoginForm(UserLoginForm form) {
-        validateNotBlank(form.getUserId(), form.getUserPassword());
+    public void validateLoginForm(UserLoginForm form) {
+        ValidationUtils.validateNotBlank(form.getUserId(), form.getUserPassword());
     }
 
     private User findUserById(String userId) {
         return userRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 아이디입니다."));
+                .orElseThrow(() -> new IllegalArgumentException(ERROR_USER_NOT_FOUND));
     }
 
     private void validatePassword(User user, String password) {
         if (!user.getPassword().equals(password)) {
-            throw new IllegalArgumentException("비밀번호가 올바르지 않습니다.");
-        }
-    }
-
-    private void validateNotBlank(String... values) {
-        for (String value : values) {
-            if (value == null || value.isBlank()) {
-                throw new IllegalArgumentException("모든 항목을 입력해야 합니다.");
-            }
+            throw new IllegalArgumentException(ERROR_INVALID_PASSWORD);
         }
     }
 }
