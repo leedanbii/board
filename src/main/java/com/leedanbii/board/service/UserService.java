@@ -5,6 +5,7 @@ import com.leedanbii.board.dto.UserRegisterForm;
 import com.leedanbii.board.entity.User;
 import com.leedanbii.board.repository.UserRepository;
 import com.leedanbii.board.util.ValidationUtils;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,9 +18,11 @@ public class UserService {
     private static final String ERROR_INVALID_PASSWORD = "비밀번호가 올바르지 않습니다.";
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public User register(UserRegisterForm form) {
@@ -27,7 +30,9 @@ public class UserService {
         validateUserForm(form);
         checkDuplicateUserId(form.getUserId());
 
-        User user = User.of(form.getUserId(), form.getUserPassword(), form.getUserName());
+        String encodedPassword = encodePassword(form.getUserPassword());
+
+        User user = User.of(form.getUserId(), encodedPassword, form.getUserName());
         return userRepository.save(user);
     }
 
@@ -61,8 +66,12 @@ public class UserService {
     }
 
     private void validatePassword(User user, String password) {
-        if (!user.getPassword().equals(password)) {
+        if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new IllegalArgumentException(ERROR_INVALID_PASSWORD);
         }
+    }
+
+    private String encodePassword(String password) {
+        return passwordEncoder.encode(password);
     }
 }
