@@ -2,6 +2,7 @@ package com.leedanbii.board.controller;
 
 import com.leedanbii.board.dto.BoardForm;
 import com.leedanbii.board.dto.BoardUpdateForm;
+import com.leedanbii.board.entity.Board;
 import com.leedanbii.board.entity.User;
 import com.leedanbii.board.service.BoardService;
 import jakarta.servlet.http.HttpSession;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -51,7 +53,18 @@ public class BoardController {
     }
 
     @GetMapping("/{id}/update")
-    public String update(@PathVariable("id") Long id, Model model) {
+    public String update(@PathVariable("id") Long id, Model model, HttpSession session) {
+        User loginUser = (User) session.getAttribute("loginUser");
+        if (loginUser == null) {
+            return "redirect:/";
+        }
+
+        Board board = boardService.getBoard(id);
+
+        if (!board.getWriter().equals(loginUser)) {
+            throw new IllegalArgumentException("권한이 없습니다.");
+        }
+
         model.addAttribute("board", boardService.getBoard(id));
         return "boards/update";
     }
@@ -63,19 +76,19 @@ public class BoardController {
             return "redirect:/";
         }
 
-        boardService.createBoard(form, loginUser);
-        return "redirect:/boards/list";
+        Long boardId = boardService.createBoard(form, loginUser);
+        return "redirect:/boards/" + boardId;
     }
 
-    @PostMapping("/{id}/update")
+    @PutMapping("/{id}")
     public String updateBoard(@PathVariable("id") Long id, BoardUpdateForm form, HttpSession session) {
         User loginUser = (User) session.getAttribute("loginUser");
         if (loginUser == null) {
             return "redirect:/";
         }
 
-        boardService.updateBoard(id, form, loginUser);
-        return "redirect:/boards/list";
+        Long boardId = boardService.updateBoard(id, form, loginUser);
+        return "redirect:/boards/" + boardId;
     }
 
     @DeleteMapping("/{id}/delete")
