@@ -2,8 +2,7 @@ package com.leedanbii.board.controller;
 
 import com.leedanbii.board.dto.BoardForm;
 import com.leedanbii.board.dto.BoardUpdateForm;
-import com.leedanbii.board.entity.Board;
-import com.leedanbii.board.entity.User;
+import com.leedanbii.board.domain.User;
 import com.leedanbii.board.service.BoardService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -59,11 +58,7 @@ public class BoardController {
             return "redirect:/";
         }
 
-        Board board = boardService.getBoard(id);
-
-        if (!board.getWriter().equals(loginUser)) {
-            throw new IllegalArgumentException("권한이 없습니다.");
-        }
+        boardService.getBoardForUpdate(id, loginUser);
 
         model.addAttribute("board", boardService.getBoard(id));
         return "boards/update";

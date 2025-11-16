@@ -2,7 +2,7 @@ package com.leedanbii.board.controller;
 
 import com.leedanbii.board.dto.UserLoginForm;
 import com.leedanbii.board.dto.UserRegisterForm;
-import com.leedanbii.board.entity.User;
+import com.leedanbii.board.domain.User;
 import com.leedanbii.board.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;

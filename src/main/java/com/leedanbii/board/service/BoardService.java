@@ -2,8 +2,8 @@ package com.leedanbii.board.service;
 
 import com.leedanbii.board.dto.BoardForm;
 import com.leedanbii.board.dto.BoardUpdateForm;
-import com.leedanbii.board.entity.Board;
-import com.leedanbii.board.entity.User;
+import com.leedanbii.board.domain.Board;
+import com.leedanbii.board.domain.User;
 import com.leedanbii.board.repository.BoardRepository;
 import com.leedanbii.board.util.ValidationUtils;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.leedanbii.board.entity;
+package com.leedanbii.board.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

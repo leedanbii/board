@@ -2,7 +2,7 @@ package com.leedanbii.board.service;
 
 import com.leedanbii.board.dto.UserLoginForm;
 import com.leedanbii.board.dto.UserRegisterForm;
-import com.leedanbii.board.entity.User;
+import com.leedanbii.board.domain.User;
 import com.leedanbii.board.repository.UserRepository;
 import com.leedanbii.board.util.ValidationUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;

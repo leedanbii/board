@@ -1,6 +1,6 @@
 package com.leedanbii.board.repository;
 
-import com.leedanbii.board.entity.User;
+import com.leedanbii.board.domain.User;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
