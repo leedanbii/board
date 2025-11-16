@@ -56,6 +56,12 @@ public class BoardService {
         return board.getId();
     }
 
+    public void getBoardForUpdate(Long id, User loginUser) {
+        if(!findWriterIdByBoardId(id).equals(loginUser.getId())) {
+            throw new IllegalArgumentException(ERROR_NO_PERMISSION);
+        }
+    }
+
     public void deleteBoard(Long boardId, User loginUser) {
         Board board = getBoard(boardId);
         validatePermission(board, loginUser);
@@ -94,5 +100,9 @@ public class BoardService {
         if(!board.getWriter().getId().equals(loginUser.getId())) {
             throw new IllegalArgumentException(ERROR_NO_PERMISSION);
         }
+    }
+
+    private Long findWriterIdByBoardId(Long id) {
+        return getBoard(id).getWriter().getId();
     }
 }
