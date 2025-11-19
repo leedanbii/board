@@ -2,9 +2,10 @@ package com.leedanbii.board.controller;
 
 import com.leedanbii.board.dto.BoardForm;
 import com.leedanbii.board.dto.BoardUpdateForm;
-import com.leedanbii.board.domain.User;
 import com.leedanbii.board.service.BoardService;
-import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,26 +17,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/boards")
+@RequiredArgsConstructor
 public class BoardController {
 
     private final BoardService boardService;
 
-    public BoardController(BoardService boardService) {
-        this.boardService = boardService;
-    }
-
     @GetMapping
-    public String home(HttpSession session, Model model) {
-        User loginUser = (User) session.getAttribute("loginUser");
+    public String home(@AuthenticationPrincipal UserDetails loginUser, Model model) {
         if (loginUser == null) {
             return "redirect:/";
         }
-        model.addAttribute("username", loginUser.getName());
+        model.addAttribute("username", loginUser.getUsername());
         return "boards/home";
     }
 
     @GetMapping("/new")
-    public String showCreateForm() {
+    public String showCreateForm(@AuthenticationPrincipal UserDetails loginUser) {
+        if (loginUser == null) {
+            return "redirect:/";
+        }
         return "boards/form";
     }
 
@@ -52,47 +52,29 @@ public class BoardController {
     }
 
     @GetMapping("/{id}/update")
-    public String update(@PathVariable("id") Long id, Model model, HttpSession session) {
-        User loginUser = (User) session.getAttribute("loginUser");
+    public String update(@PathVariable("id") Long id, Model model, @AuthenticationPrincipal UserDetails loginUser) {
         if (loginUser == null) {
             return "redirect:/";
         }
-
-        boardService.getBoardForUpdate(id, loginUser);
-
-        model.addAttribute("board", boardService.getBoard(id));
+        model.addAttribute("board", boardService.getBoardForUpdate(id, loginUser.getUsername()));
         return "boards/update";
     }
 
     @PostMapping("/new")
-    public String createBoard(BoardForm form, HttpSession session) {
-        User loginUser = (User) session.getAttribute("loginUser");
-        if (loginUser == null) {
-            return "redirect:/";
-        }
-
-        Long boardId = boardService.createBoard(form, loginUser);
+    public String createBoard(BoardForm form, @AuthenticationPrincipal UserDetails loginUser) {
+        Long boardId = boardService.createBoard(form, loginUser.getUsername());
         return "redirect:/boards/" + boardId;
     }
 
     @PutMapping("/{id}")
-    public String updateBoard(@PathVariable("id") Long id, BoardUpdateForm form, HttpSession session) {
-        User loginUser = (User) session.getAttribute("loginUser");
-        if (loginUser == null) {
-            return "redirect:/";
-        }
-
-        Long boardId = boardService.updateBoard(id, form, loginUser);
+    public String updateBoard(@PathVariable("id") Long id, BoardUpdateForm form, @AuthenticationPrincipal UserDetails loginUser) {
+        Long boardId = boardService.updateBoard(id, form, loginUser.getUsername());
         return "redirect:/boards/" + boardId;
     }
 
     @DeleteMapping("/{id}/delete")
-    public String deleteBoard(@PathVariable("id") Long id, HttpSession session) {
-        User loginUser = (User) session.getAttribute("loginUser");
-        if (loginUser == null) {
-            return "redirect:/";
-        }
-        boardService.deleteBoard(id, loginUser);
+    public String deleteBoard(@PathVariable("id") Long id, @AuthenticationPrincipal UserDetails loginUser) {
+        boardService.deleteBoard(id, loginUser.getUsername());
         return "redirect:/boards/list";
     }
 }

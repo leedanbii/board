@@ -5,30 +5,34 @@ import com.leedanbii.board.dto.BoardUpdateForm;
 import com.leedanbii.board.domain.Board;
 import com.leedanbii.board.domain.User;
 import com.leedanbii.board.repository.BoardRepository;
+import com.leedanbii.board.repository.UserRepository;
 import com.leedanbii.board.util.ValidationUtils;
 import java.util.List;
+import java.util.Objects;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class BoardService {
 
     private static final long TITLE_LENGTH_MAX = 30;
     private static final long CONTENTS_LENGTH_MAX = 1000;
 
     private static final String ERROR_BOARD_NOT_FOUND = "게시글이 존재하지 않습니다.";
+    private static final String ERROR_USER_NOT_FOUND = "사용자가 존재하지 않습니다.";
     private static final String ERROR_TITLE_TOO_LONG = "제목은 %d자를 초과할 수 없습니다.";
     private static final String ERROR_CONTENTS_TOO_LONG = "내용은 %d자를 초과할 수 없습니다.";
     private static final String ERROR_NO_PERMISSION = "권한이 없습니다.";
 
     private final BoardRepository boardRepository;
+    private final UserRepository userRepository;
 
-    public BoardService(BoardRepository boardRepository) {
-        this.boardRepository = boardRepository;
-    }
-
-    public Long createBoard(BoardForm form, User writer) {
+    public Long createBoard(BoardForm form, String userId) {
         ValidationUtils.validateNotBlank(form.getBoardTitle(), form.getBoardContent());
         validateBoard(form);
+
+        User writer = getUserByUserId(userId);
 
         Board board = Board.of(form.getBoardTitle(), form.getBoardContent(), writer);
         boardRepository.save(board);
@@ -44,11 +48,11 @@ public class BoardService {
                 .orElseThrow(() -> new IllegalArgumentException(ERROR_BOARD_NOT_FOUND));
     }
 
-    public Long updateBoard(Long boardId, BoardUpdateForm form, User loginUser) {
+    public Long updateBoard(Long boardId, BoardUpdateForm form, String userId) {
         ValidationUtils.validateNotBlank(form.getBoardTitle(), form.getBoardContent());
         validateUpdateBoard(form);
 
-        Board board = findBoardAndValidatePermission(boardId, loginUser);
+        Board board = findBoardAndValidatePermission(boardId, userId);
 
         board.update(form.getBoardTitle(), form.getBoardContent());
         boardRepository.save(board);
@@ -56,16 +60,21 @@ public class BoardService {
         return board.getId();
     }
 
-    public void getBoardForUpdate(Long id, User loginUser) {
-        if(!findWriterIdByBoardId(id).equals(loginUser.getId())) {
+    public Board getBoardForUpdate(Long id, String userId) {
+        if(!findWriterUserIdByBoardId(id).equals(userId)) {
             throw new IllegalArgumentException(ERROR_NO_PERMISSION);
         }
+        return getBoard(id);
     }
 
-    public void deleteBoard(Long boardId, User loginUser) {
-        Board board = getBoard(boardId);
-        validatePermission(board, loginUser);
+    public void deleteBoard(Long boardId, String userId) {
+        validatePermission(boardId, userId);
         boardRepository.deleteById(boardId);
+    }
+
+    public User getUserByUserId(String id) {
+        return userRepository.findByUserId(id)
+                .orElseThrow(() -> new IllegalArgumentException(ERROR_USER_NOT_FOUND));
     }
 
     private void validateBoard(BoardForm form) {
@@ -90,19 +99,19 @@ public class BoardService {
         }
     }
 
-    private Board findBoardAndValidatePermission(Long boardId, User loginUser) {
-        Board board = getBoard(boardId);
-        validatePermission(board, loginUser);
-        return board;
+    private Board findBoardAndValidatePermission(Long boardId, String userId) {
+        validatePermission(boardId, userId);
+        return getBoard(boardId);
     }
 
-    private void validatePermission(Board board, User loginUser) {
-        if(!board.getWriter().getId().equals(loginUser.getId())) {
+    private void validatePermission(Long boardId, String userId) {
+        String writerUserId = findWriterUserIdByBoardId(boardId);
+        if(!Objects.equals(writerUserId, userId)) {
             throw new IllegalArgumentException(ERROR_NO_PERMISSION);
         }
     }
 
-    private Long findWriterIdByBoardId(Long id) {
-        return getBoard(id).getWriter().getId();
+    private String findWriterUserIdByBoardId(Long id) {
+        return getBoard(id).getWriter().getUserId();
     }
 }
