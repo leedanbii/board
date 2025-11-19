@@ -1,0 +1,25 @@
+package com.leedanbii.board.exception;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.stereotype.Component;
+
+@Component
+public class CustomAuthFailureHandler implements AuthenticationFailureHandler {
+
+    @Override
+    public void onAuthenticationFailure(HttpServletRequest request,
+                                        HttpServletResponse response,
+                                        AuthenticationException exception)
+            throws IOException {
+
+        String errorMessage = exception.getMessage();
+
+        response.sendRedirect("/?error=" + URLEncoder.encode(errorMessage, StandardCharsets.UTF_8));
+    }
+}
