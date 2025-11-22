@@ -3,12 +3,12 @@ package com.leedanbii.board.controller;
 import com.leedanbii.board.dto.BoardForm;
 import com.leedanbii.board.dto.BoardUpdateForm;
 import com.leedanbii.board.service.BoardService;
-import com.leedanbii.board.util.ValidationUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -62,15 +62,21 @@ public class BoardController {
     }
 
     @PostMapping("/new")
-    public String createBoard(BoardForm form, @AuthenticationPrincipal UserDetails loginUser) {
-        ValidationUtils.validateNotBlank(form.getBoardTitle(), form.getBoardContent());
+    public String createBoard(BoardForm form, @AuthenticationPrincipal UserDetails loginUser, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("errors", bindingResult.getAllErrors());
+            return "/boards/new";
+        }
         Long boardId = boardService.createBoard(form, loginUser.getUsername());
         return "redirect:/boards/" + boardId;
     }
 
     @PutMapping("/{id}")
-    public String updateBoard(@PathVariable("id") Long id, BoardUpdateForm form, @AuthenticationPrincipal UserDetails loginUser) {
-        ValidationUtils.validateNotBlank(form.getBoardTitle(), form.getBoardContent());
+    public String updateBoard(@PathVariable("id") Long id, BoardUpdateForm form, @AuthenticationPrincipal UserDetails loginUser, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("errors", bindingResult.getAllErrors());
+            return "/boards/update";
+        }
         Long boardId = boardService.updateBoard(id, form, loginUser.getUsername());
         return "redirect:/boards/" + boardId;
     }

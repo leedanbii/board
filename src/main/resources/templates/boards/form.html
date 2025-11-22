@@ -63,5 +63,12 @@
     <input type="submit" value="작성">
 </form>
 <a class="btn" href="/boards/list">목록으로</a>
+<th:block th:if="${errors != null}">
+    <th:block th:each="err : ${errors}">
+        <script th:inline="javascript">
+            alert('[[${err.defaultMessage}]]');
+        </script>
+    </th:block>
+</th:block>
 </body>
 </html>
