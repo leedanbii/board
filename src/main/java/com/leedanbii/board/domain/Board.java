@@ -24,8 +24,8 @@ public class Board {
 
     private static final long TITLE_LENGTH_MAX = 30;
     private static final long CONTENTS_LENGTH_MAX = 1000;
-    private static final String ERROR_TITLE_TOO_LONG = "제목은 %d자를 초과할 수 없습니다.";
-    private static final String ERROR_CONTENTS_TOO_LONG = "내용은 %d자를 초과할 수 없습니다.";
+    private static final String ERROR_TITLE_TOO_LONG = "제목은 1~%d자여야 합니다.";
+    private static final String ERROR_CONTENTS_TOO_LONG = "내용은 1~%d자여야 합니다.";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,32 +46,35 @@ public class Board {
     private User writer;
 
     private Board(String title, String content, User writer) {
+        validateInput(title, content);
         this.title = title;
         this.content = content;
         this.writer = writer;
     }
 
     public static Board of(String title, String content, User writer) {
-        validateTitle(title);
-        validateContent(content);
         return new Board(title, content, writer);
     }
 
     public void update(String newTitle, String newContent) {
-        validateTitle(newTitle);
-        validateContent(newContent);
+        validateInput(newTitle, newContent);
         this.title = newTitle;
         this.content = newContent;
     }
 
-    public static void validateTitle(String title) {
-        if (title.length() > TITLE_LENGTH_MAX) {
+    public void validateInput(String title, String content) {
+        validateTitle(title);
+        validateContent(content);
+    }
+
+    private void validateTitle(String title) {
+        if (title.isBlank() || title.length() > TITLE_LENGTH_MAX) {
             throw new IllegalArgumentException(String.format(ERROR_TITLE_TOO_LONG, TITLE_LENGTH_MAX));
         }
     }
 
-    public static void validateContent(String content) {
-        if (content.length() > CONTENTS_LENGTH_MAX) {
+    private void validateContent(String content) {
+        if (content.isBlank() || content.length() > CONTENTS_LENGTH_MAX) {
             throw new IllegalArgumentException(String.format(ERROR_CONTENTS_TOO_LONG, CONTENTS_LENGTH_MAX));
         }
     }
