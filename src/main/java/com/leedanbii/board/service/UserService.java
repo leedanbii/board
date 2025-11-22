@@ -3,7 +3,6 @@ package com.leedanbii.board.service;
 import com.leedanbii.board.dto.UserRegisterForm;
 import com.leedanbii.board.domain.User;
 import com.leedanbii.board.repository.UserRepository;
-import com.leedanbii.board.util.ValidationUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,7 +18,6 @@ public class UserService {
 
     @Transactional
     public void register(UserRegisterForm form) {
-        ValidationUtils.validateNotBlank(form.getUserId(), form.getUserPassword(), form.getUserName());
         checkDuplicateUserId(form.getUserId());
 
         String encodedPassword = encodePassword(form.getUserPassword());

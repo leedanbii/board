@@ -6,7 +6,6 @@ import com.leedanbii.board.domain.Board;
 import com.leedanbii.board.domain.User;
 import com.leedanbii.board.repository.BoardRepository;
 import com.leedanbii.board.repository.UserRepository;
-import com.leedanbii.board.util.ValidationUtils;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Objects;
@@ -26,10 +25,7 @@ public class BoardService {
 
     @Transactional
     public Long createBoard(BoardForm form, String userId) {
-        ValidationUtils.validateNotBlank(form.getBoardTitle(), form.getBoardContent());
-
         User writer = getUserByUserId(userId);
-
         Board board = Board.of(form.getBoardTitle(), form.getBoardContent(), writer);
         boardRepository.save(board);
         return board.getId();
@@ -46,13 +42,9 @@ public class BoardService {
 
     @Transactional
     public Long updateBoard(Long boardId, BoardUpdateForm form, String userId) {
-        ValidationUtils.validateNotBlank(form.getBoardTitle(), form.getBoardContent());
-
         Board board = findBoardAndValidatePermission(boardId, userId);
-
         board.update(form.getBoardTitle(), form.getBoardContent());
         boardRepository.save(board);
-
         return board.getId();
     }
 
