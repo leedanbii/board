@@ -61,11 +61,11 @@ public class BoardService {
         return board.getId();
     }
 
-    public Board getBoardForUpdate(Long id, String userId) {
+    public BoardDetailResponse getBoardForUpdate(Long id, String userId) {
         if(!findWriterUserIdByBoardId(id).equals(userId)) {
             throw new IllegalArgumentException(ERROR_NO_PERMISSION);
         }
-        return getBoard(id);
+        return getBoardDetail(id);
     }
 
     @Transactional
