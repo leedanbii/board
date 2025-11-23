@@ -1,6 +1,12 @@
 # 4주차 과제 - 오픈미션
 
-# 게시판
+---
+## Spring Boot 게시판 프로젝트
+
+## 📝 프로젝트 소개
+- 게시판 웹 애플리케이션 구현
+- 회원가입, 로그인/로그아웃, 게시글 작성/조회/수정/삭제, 댓글 작성 기능 포함
+- 인증 및 권한 기반 접근 제어 적용
 
 ---
 
@@ -73,6 +79,21 @@
 
 ---
 
+## 5. 댓글 작성 / 삭제
+
+- 로그인 한 사용자는 모든 게시글에 댓글을 작성할 수 있다.
+- 댓글 내용은 1자 이상 300자 이하여야 한다.
+- 댓글 삭제는 댓글을 작성한 작성자만 삭제할 수 있다.
+
+**예외 상황**
+
+- 로그인 하지 않은 사용자가 댓글 작성/삭제를 시도하는 경우
+- 작성자가 아닌 사용자가 댓글 삭제를 시도하는 경우
+- 댓글 내용을 작성하지 않거나 공백만을 작성하는 경우
+- 댓글이 300자를 초과하는 경우
+
+---
+
 # 🛠️ 기술 스택 및 구조
 
 이번 프로젝트에서는 Spring 기반의 웹 애플리케이션을 구현하며, 아래와 같은 기술과 구조를 사용했습니다.
@@ -86,9 +107,16 @@
 - **Thymeleaf**: 서버 사이드 HTML 렌더링
 - **Maven**: 빌드 및 의존성 관리
 
-## 구조
 
----
+## 🏗️ 구조 및 아키텍처
+
+### 레이어 구조
+- **Controller**: 요청 처리 및 View 반환
+- **Service**: 비즈니스 로직 처리 및 권한 검증
+- **Repository**: JPA를 통한 DB 연동
+- **Domain**: Board, User, Comment 등의 핵심 엔티티
+- **Security**: Spring Security 기반 인증/권한 관리
+
 
 ### 특징
 
@@ -99,7 +127,26 @@
 
 ---
 
-# 📌 기타 사항
+## 🔒 인증 및 권한 관리
+- 로그인 사용자는 게시글 작성 가능
+- 게시글/댓글 수정 및 삭제는 작성자만 가능
+- Thymeleaf `#authentication.name`으로 현재 사용자 ID 확인 후 UI 제어
 
-- RESTful하게 URL 구성 (`/boards`, `/boards/{id}/update`, `/boards/{id}/delete`)
-- Spring Boot 3.x, Spring Security 6.x 기반 구현
+---
+
+## 💾 데이터베이스 구조
+- **User 테이블**: id, name, userId, password
+- **Board 테이블**: id, title, content, writer_id, createdAt
+- **Comment 테이블**: id, content, board_id, commenter_id, createdAt
+- **관계**
+    - User 1:N Board
+    - Board 1:N Comment
+    - User 1:N Comment
+
+---
+
+## 🚀 실행 방법
+1. MySQL 실행 및 데이터베이스 생성
+2. `application.properties`에서 DB 정보 확인
+3. 프로젝트 빌드 및 실행
+4. 브라우저에서 `http://localhost:8080/` 접속
