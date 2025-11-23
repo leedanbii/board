@@ -26,10 +26,9 @@ public class CommentService {
     private final BoardRepository boardRepository;
 
     @Transactional
-    public Long createComment(CommentForm form, String commenterId, Long boardId) {
+    public void createComment(CommentForm form, String commenterId, Long boardId) {
         Comment comment = Comment.of(form.getContent(), getBoardByBoardId(boardId), getUserByUserId(commenterId));
         commentRepository.save(comment);
-        return comment.getId();
     }
 
     public Comment getComment(Long id) {

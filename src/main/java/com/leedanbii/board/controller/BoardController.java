@@ -1,6 +1,5 @@
 package com.leedanbii.board.controller;
 
-import com.leedanbii.board.dto.BoardDetailResponse;
 import com.leedanbii.board.dto.BoardForm;
 import com.leedanbii.board.dto.BoardResponse;
 import com.leedanbii.board.dto.BoardUpdateForm;
