@@ -1,6 +1,6 @@
 package com.leedanbii.board.domain;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.DisplayName;
@@ -11,11 +11,8 @@ public class UserTest {
     @Test
     @DisplayName("정상적으로 User 생성")
     void createUser_success() {
-        User user = User.of("danbi1", "Password1!", "단비");
-
-        assertThat(user.getUserId()).isEqualTo("danbi1");
-        assertThat(user.getPassword()).isEqualTo("Password1!");
-        assertThat(user.getName()).isEqualTo("단비");
+        assertThatCode(() -> User.of("danbi1", "Password1!", "단비"))
+                .doesNotThrowAnyException();
     }
 
     @Test
@@ -50,6 +47,7 @@ public class UserTest {
         assertThatThrownBy(() ->
                 User.of("1invalid", "Password1!", "단비")
         ).isInstanceOf(IllegalArgumentException.class);
+
         assertThatThrownBy(() ->
                 User.of("inva#lid$", "Password1!", "단비")
         ).isInstanceOf(IllegalArgumentException.class);

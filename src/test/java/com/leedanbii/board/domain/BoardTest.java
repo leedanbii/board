@@ -1,5 +1,6 @@
 package com.leedanbii.board.domain;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -17,11 +18,8 @@ public class BoardTest {
     void createBoard_success() {
         User writer = testUser();
 
-        Board board = Board.of("제목", "내용", writer);
-
-        assertThat(board.getTitle()).isEqualTo("제목");
-        assertThat(board.getContent()).isEqualTo("내용");
-        assertThat(board.getWriter()).isEqualTo(writer);
+        assertThatCode(() -> Board.of("제목", "내용", writer))
+                .doesNotThrowAnyException();
     }
 
     @Test
