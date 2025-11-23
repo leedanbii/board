@@ -43,6 +43,7 @@ public class Comment {
     private LocalDateTime createdAt = LocalDateTime.now();
 
     private Comment(String content, Board board, User commenter) {
+        content = content.trim();
         validateContent(content);
         this.content = content;
         this.board = board;

@@ -24,6 +24,9 @@ public class CommentController {
                                 @Valid CommentForm form,
                                 @AuthenticationPrincipal UserDetails loginUser
     ) {
+        if (loginUser == null) {
+            return "redirect:/";
+        }
         commentService.createComment(form, loginUser.getUsername(), boardId);
         return "redirect:/boards/" + boardId;
     }

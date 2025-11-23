@@ -51,6 +51,8 @@ public class Board {
     private List<Comment> comments = new ArrayList<>();
 
     private Board(String title, String content, User writer) {
+        title = title.trim();
+        content = content.trim();
         validateInput(title, content);
         this.title = title;
         this.content = content;
@@ -62,6 +64,8 @@ public class Board {
     }
 
     public void update(String newTitle, String newContent) {
+        newTitle = newTitle.trim();
+        newContent = newContent.trim();
         validateInput(newTitle, newContent);
         this.title = newTitle;
         this.content = newContent;
