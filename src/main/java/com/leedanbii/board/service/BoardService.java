@@ -1,6 +1,8 @@
 package com.leedanbii.board.service;
 
+import com.leedanbii.board.dto.BoardDetailResponse;
 import com.leedanbii.board.dto.BoardForm;
+import com.leedanbii.board.dto.BoardResponse;
 import com.leedanbii.board.dto.BoardUpdateForm;
 import com.leedanbii.board.domain.Board;
 import com.leedanbii.board.domain.User;
@@ -9,6 +11,7 @@ import com.leedanbii.board.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -31,13 +34,23 @@ public class BoardService {
         return board.getId();
     }
 
-    public List<Board> getAllBoards() {
-        return boardRepository.findAll();
+    public List<BoardResponse> getAllBoards() {
+        List<Board> boards = boardRepository.findAllWithWriter();
+
+        return boards.stream()
+                .map(BoardResponse::from)
+                .collect(Collectors.toList());
     }
 
-    public Board getBoard(Long id) {
+    private Board getBoard(Long id) {
         return boardRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException(ERROR_BOARD_NOT_FOUND));
+    }
+
+    public BoardDetailResponse getBoardDetail(Long id) {
+        Board board = boardRepository.findByIdWithComments(id)
+                .orElseThrow(() -> new IllegalArgumentException(ERROR_BOARD_NOT_FOUND));
+        return BoardDetailResponse.from(board);
     }
 
     @Transactional

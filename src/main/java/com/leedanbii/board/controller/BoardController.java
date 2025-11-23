@@ -1,9 +1,12 @@
 package com.leedanbii.board.controller;
 
+import com.leedanbii.board.dto.BoardDetailResponse;
 import com.leedanbii.board.dto.BoardForm;
+import com.leedanbii.board.dto.BoardResponse;
 import com.leedanbii.board.dto.BoardUpdateForm;
 import com.leedanbii.board.service.BoardService;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -44,13 +47,15 @@ public class BoardController {
 
     @GetMapping("/list")
     public String getAllBoards(Model model) {
-        model.addAttribute("boards", boardService.getAllBoards());
+        List<BoardResponse> boards = boardService.getAllBoards();
+        model.addAttribute("boards", boards);
         return "boards/list";
     }
 
     @GetMapping("/{id}")
     public String detail(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("board", boardService.getBoard(id));
+        BoardDetailResponse board = boardService.getBoardDetail(id);
+        model.addAttribute("board", board);
         return "boards/detail";
     }
 
