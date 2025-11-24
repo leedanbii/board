@@ -7,6 +7,8 @@
 - 게시판 웹 애플리케이션 구현
 - 회원가입, 로그인/로그아웃, 게시글 작성/조회/수정/삭제, 댓글 작성 기능 포함
 - 인증 및 권한 기반 접근 제어 적용
+- Cloudtype을 통해 MariaDB + Spring Boot로 배포
+- 배포 URL: [https://port-0-board-micg1r5d9f398747.sel3.cloudtype.app/](https://port-0-board-micg1r5d9f398747.sel3.cloudtype.app/)
 
 ---
 
@@ -46,7 +48,7 @@
 
 ## 3. 게시글 작성
 
-- 로그인 한 사용자가 **제목, 내용**을 입력한다.
+- 로그인 후 **제목, 내용**을 입력해 작성한다.
 - 제목은 **30자**, 내용은 **1000자**로 제한된다.
 
 **예외 상황**
@@ -117,20 +119,13 @@
 - **Domain**: Board, User, Comment 등의 핵심 엔티티
 - **Security**: Spring Security 기반 인증/권한 관리
 
-
-### 특징
-
-- **Spring Security**를 활용하여 로그인, 로그아웃, 접근 권한 관리를 구현
-- **JPA**를 통해 User, Board 등의 엔티티를 DB 테이블과 매핑
-- **MySQL 데이터베이스**와 연동하며, `spring.jpa.hibernate.ddl-auto=update`로 스키마 자동 업데이트
-- 게시글 작성, 조회, 수정, 삭제 시 인증 및 권한 검증을 서비스 계층에서 처리
-
 ---
 
 ## 🔒 인증 및 권한 관리
 - 로그인 사용자는 게시글 작성 가능
 - 게시글/댓글 수정 및 삭제는 작성자만 가능
 - Thymeleaf `#authentication.name`으로 현재 사용자 ID 확인 후 UI 제어
+- **Spring Security**를 활용하여 로그인, 로그아웃, 접근 권한 관리를 구현
 
 ---
 
@@ -145,8 +140,26 @@
 
 ---
 
+## 📝 API 요약 (REST 기준)
+
+| Method | Endpoint                                   | 설명 |
+|--------|--------------------------------------------|-----|
+| POST   | /users/register                            | 회원가입 |
+| POST   | /users/login                               | 로그인 |
+| GET    | /boards/list                               | 게시글 목록 조회 |
+| POST   | /boards/new                                | 게시글 작성 |
+| GET    | /boards/{id}                               | 게시글 상세 조회 |
+| PUT    | /boards/{id}/update                        | 게시글 수정 (작성자만) |
+| DELETE | /boards/{id}/delete                        | 게시글 삭제 (작성자만) |
+| POST   | /boards/{boardId}/comments                 | 댓글 작성 |
+| DELETE | /comments/{boardId}/comments/{commentId}/delete | 댓글 삭제 (작성자만) |
+
+> 모든 API는 로그인 필요 (게시글 조회/목록 제외)
+
+---
+
 ## 🚀 실행 방법
-1. MySQL 실행 및 데이터베이스 생성
-2. `application.properties`에서 DB 정보 확인
-3. 프로젝트 빌드 및 실행
-4. 브라우저에서 `http://localhost:8080/` 접속
+1. 브라우저에서 아래 URL 접속  
+   - [https://port-0-board-micg1r5d9f398747.sel3.cloudtype.app/](https://port-0-board-micg1r5d9f398747.sel3.cloudtype.app/)
+2. 회원가입 후 로그인
+3. 게시글 작성/조회/수정/삭제, 댓글 작성/삭제 가능
