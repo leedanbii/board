@@ -26,7 +26,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/register", "/users/register").permitAll()
+                        .requestMatchers("/", "/users/register", "/users/register").permitAll()
                         .requestMatchers(HttpMethod.GET, "/boards/**").permitAll()
                         .requestMatchers("/boards/new", "/boards/*/update", "/boards/*/delete").authenticated()
                         .anyRequest().authenticated()

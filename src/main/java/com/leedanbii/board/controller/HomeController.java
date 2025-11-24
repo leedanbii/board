@@ -10,9 +10,4 @@ public class HomeController {
     public String main() {
         return "main";
     }
-
-    @GetMapping("/register")
-    public String registerForm() {
-        return "register";
-    }
 }
