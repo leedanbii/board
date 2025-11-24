@@ -49,6 +49,9 @@ public class User {
     private String name;
 
     private User(String userId, String password, String name) {
+        userId = userId.trim();
+        password = password.trim();
+        name = name.trim();
         validateInput(userId, password, name);
         this.userId = userId;
         this.password = password;
