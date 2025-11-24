@@ -23,6 +23,7 @@ import com.leedanbii.board.dto.CommentResponse;
 import com.leedanbii.board.exception.CustomAuthFailureHandler;
 import com.leedanbii.board.service.BoardService;
 import com.leedanbii.board.service.CustomUserDetailsService;
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
@@ -50,7 +51,7 @@ public class BoardControllerTest {
     private static final String UPDATE_URL = BASE_URL + "/{id}";
     private static final String DELETE_URL = BASE_URL + "/{id}/delete";
 
-    private static final OffsetDateTime FIXED_TIME = OffsetDateTime.of(2024, 1, 1, 12, 0, 0, 0, ZoneOffset.ofHours(9));
+    private static final LocalDateTime FIXED_TIME = LocalDateTime.of(2024, 1, 1, 12,0,0);
 
     @Autowired
     private MockMvc mockMvc;
@@ -119,8 +120,8 @@ public class BoardControllerTest {
     @DisplayName("게시글 상세 조회")
     void detail_success() throws Exception {
         List<CommentResponse> comments = List.of(
-                new CommentResponse(1L, "First comment", "user1", "userName1", OffsetDateTime.now(ZoneId.of("Asia/Seoul"))),
-                new CommentResponse(2L, "Second comment", "user2", "userName2", OffsetDateTime.now(ZoneId.of("Asia/Seoul")))
+                new CommentResponse(1L, "First comment", "user1", "userName1", LocalDateTime.now()),
+                new CommentResponse(2L, "Second comment", "user2", "userName2", LocalDateTime.now())
         );
 
         BoardDetailResponse boardDetail = new BoardDetailResponse(
