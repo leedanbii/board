@@ -73,7 +73,7 @@ public class BoardController {
                               Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
-            return "/boards/form";
+            return "boards/form";
         }
         Long boardId = boardService.createBoard(form, loginUser.getUsername());
         return "redirect:/boards/" + boardId;
@@ -88,7 +88,7 @@ public class BoardController {
         if (bindingResult.hasErrors()) {
             model.addAttribute("board", boardService.getBoardForUpdate(id, loginUser.getUsername()));
             model.addAttribute("errors", bindingResult.getAllErrors());
-            return "/boards/update";
+            return "boards/update";
         }
         Long boardId = boardService.updateBoard(id, form, loginUser.getUsername());
         return "redirect:/boards/" + boardId;
