@@ -15,6 +15,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @ExtendWith(MockitoExtension.class)
 public class CustomUserDetailsServiceTest {
@@ -29,17 +31,18 @@ public class CustomUserDetailsServiceTest {
     private static final String VALID_PASSWORD = "Password1!";
     private static final String VALID_NAME = "단비";
 
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     @Test
     @DisplayName("사용자 조회 성공")
     void loadUserByUsername_success() {
-        User user = User.of(VALID_USER_ID, VALID_PASSWORD, VALID_NAME);
+        User user = User.of(VALID_USER_ID, VALID_PASSWORD, VALID_NAME, passwordEncoder::encode);
 
         given(userRepository.findByUserId(VALID_USER_ID)).willReturn(Optional.of(user));
 
         UserDetails userDetails = customUserDetailsService.loadUserByUsername(VALID_USER_ID);
 
         assertThat(userDetails.getUsername()).isEqualTo(VALID_USER_ID);
-        assertThat(userDetails.getPassword()).isEqualTo(VALID_PASSWORD);
         assertThat(userDetails.getAuthorities()).extracting("authority").containsExactly("USER");
     }
 

@@ -61,7 +61,7 @@ class UserControllerTest {
                         .with(user("admin").roles("USER"))
                         .flashAttr("form", form))
                 .andExpect(status().isOk())
-                .andExpect(view().name("/register"))
+                .andExpect(view().name("register"))
                 .andExpect(model().attributeExists("errors"));
     }
 
@@ -81,7 +81,7 @@ class UserControllerTest {
                         .with(user("admin").roles("USER"))
                         .flashAttr("form", form))
                 .andExpect(status().isOk())
-                .andExpect(view().name("/register"))
+                .andExpect(view().name("register"))
                 .andExpect(model().attributeExists("errors"));
     }
 }

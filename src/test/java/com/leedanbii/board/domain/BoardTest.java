@@ -6,11 +6,15 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class BoardTest {
 
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     private User testUser() {
-        return User.of("testUser", "Abcd1234!", "단비");
+        return User.of("testUser", "Abcd1234!", "단비", passwordEncoder::encode);
     }
 
     @Test

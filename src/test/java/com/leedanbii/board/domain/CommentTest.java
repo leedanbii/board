@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class CommentTest {
 
@@ -15,9 +17,11 @@ public class CommentTest {
 
     private static final int COMMENT_MAX_LENGTH = 300;
 
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     @BeforeEach
     void setUp() {
-        user = User.of("lee123", "Password1!", "단비");
+        user = User.of("lee123", "Password1!", "단비", passwordEncoder::encode);
         board = Board.of("제목", "내용", user);
     }
 

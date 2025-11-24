@@ -20,9 +20,7 @@ public class UserService {
     public void register(UserRegisterForm form) {
         checkDuplicateUserId(form.getUserId());
 
-        String encodedPassword = encodePassword(form.getUserPassword());
-
-        User user = User.of(form.getUserId(), encodedPassword, form.getUserName());
+        User user = User.of(form.getUserId(), form.getUserPassword(), form.getUserName(), passwordEncoder::encode);
         userRepository.save(user);
     }
 
@@ -30,9 +28,5 @@ public class UserService {
         if (userRepository.findByUserId(userId).isPresent()) {
             throw new IllegalArgumentException(ERROR_DUPLICATE_USER_ID);
         }
-    }
-
-    private String encodePassword(String password) {
-        return passwordEncoder.encode(password);
     }
 }

@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.util.function.Function;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -42,24 +43,24 @@ public class User {
     @Column(nullable = false, unique = true, length = 20)
     private String userId;
 
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false, length = 60)
     private String password;
 
     @Column(nullable = false, length = 5)
     private String name;
 
-    private User(String userId, String password, String name) {
+    private User(String userId, String rawPassword, String name, Function<String, String> encoder) {
         userId = userId.trim();
-        password = password.trim();
+        rawPassword = rawPassword.trim();
         name = name.trim();
-        validateInput(userId, password, name);
+        validateInput(userId, rawPassword, name);
         this.userId = userId;
-        this.password = password;
+        this.password = encoder.apply(rawPassword);
         this.name = name;
     }
 
-    public static User of(String userId, String password, String name) {
-        return new User(userId, password, name);
+    public static User of(String userId, String rawPassword, String name, Function<String, String> encoder) {
+        return new User(userId, rawPassword, name, encoder);
     }
 
     private void validateInput(String userId, String password, String name) {

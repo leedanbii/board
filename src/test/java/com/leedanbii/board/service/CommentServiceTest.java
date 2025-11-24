@@ -21,6 +21,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
@@ -41,9 +43,11 @@ public class CommentServiceTest {
     private User testUser;
     private Board testBoard;
 
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     @BeforeEach
     void setUp() {
-        testUser = User.of("lee123", "Password1!", "단비");
+        testUser = User.of("lee123", "Password1!", "단비", passwordEncoder::encode);
         testBoard = Board.of("제목", "내용", testUser);
         ReflectionTestUtils.setField(testBoard, "id", 1L);
     }
@@ -117,7 +121,7 @@ public class CommentServiceTest {
     @Test
     @DisplayName("댓글 삭제 실패 - 권한 없음")
     void deleteComment_noPermission() {
-        User otherUser = User.of("other123", "Password1!", "철수");
+        User otherUser = User.of("other123", "Password1!", "철수", passwordEncoder::encode);
         Comment comment = Comment.of("댓글 내용", testBoard, testUser);
         ReflectionTestUtils.setField(comment, "id", 1L);
 

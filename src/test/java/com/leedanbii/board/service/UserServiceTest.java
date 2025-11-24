@@ -44,7 +44,7 @@ public class UserServiceTest {
         form.setUserName(VALID_NAME);
 
         when(userRepository.findByUserId(VALID_USER_ID)).thenReturn(Optional.empty());
-        when(passwordEncoder.encode(VALID_PASSWORD)).thenReturn(VALID_PASSWORD);
+        when(passwordEncoder.encode(VALID_PASSWORD)).thenReturn("ENCODED");
 
         assertThatCode(() -> userService.register(form))
                 .doesNotThrowAnyException();

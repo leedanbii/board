@@ -24,6 +24,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @ExtendWith(MockitoExtension.class)
 public class BoardServiceTest {
@@ -40,9 +42,11 @@ public class BoardServiceTest {
     private User testUser;
     private Board testBoard;
 
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     @BeforeEach
     void setUp() {
-        testUser = User.of("lee123", "Password1!", "단비");
+        testUser = User.of("lee123", "Password1!", "단비", passwordEncoder::encode);
         testBoard = Board.of("제목", "내용", testUser);
     }
 
@@ -154,7 +158,7 @@ public class BoardServiceTest {
         BoardUpdateForm updateForm = new BoardUpdateForm();
         updateForm.setBoardTitle("수정된 제목");
         updateForm.setBoardContent("수정된 내용");
-        User otherUser = User.of("other123", "Password1!", "철수");
+        User otherUser = User.of("other123", "Password1!", "철수", passwordEncoder::encode);
 
         given(boardRepository.findById(testBoard.getId())).willReturn(Optional.of(testBoard));
 
