@@ -1,7 +1,7 @@
 package com.leedanbii.board.dto;
 
 import com.leedanbii.board.domain.Comment;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -12,7 +12,7 @@ public class CommentResponse {
     private String content;
     private String commenterUserId;
     private String commenterName;
-    private LocalDateTime createdAt;
+    private OffsetDateTime createdAt;
 
     public static CommentResponse from(Comment comment) {
         return new CommentResponse(
