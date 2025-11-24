@@ -42,9 +42,9 @@ public class Board {
     @Column(nullable = false, length = 1000)
     private String content;
 
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false, columnDefinition = "TIMESTAMP")
     @CreationTimestamp
-    private OffsetDateTime createdAt = OffsetDateTime.now(ZoneOffset.ofHours(9));
+    private OffsetDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)

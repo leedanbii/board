@@ -41,9 +41,9 @@ public class Comment {
     @JoinColumn(name = "user_id", nullable = false)
     private User commenter;
 
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false, columnDefinition = "TIMESTAMP")
     @CreationTimestamp
-    private OffsetDateTime createdAt = OffsetDateTime.now(ZoneOffset.ofHours(9));
+    private OffsetDateTime createdAt;
 
     private Comment(String content, Board board, User commenter) {
         content = content.trim();
