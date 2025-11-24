@@ -9,7 +9,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -42,7 +43,7 @@ public class Comment {
 
     @Column(nullable = false, updatable = false)
     @CreationTimestamp
-    private LocalDateTime createdAt;
+    private OffsetDateTime createdAt = OffsetDateTime.now(ZoneOffset.ofHours(9));
 
     private Comment(String content, Board board, User commenter) {
         content = content.trim();

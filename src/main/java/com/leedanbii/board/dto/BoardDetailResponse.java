@@ -1,7 +1,7 @@
 package com.leedanbii.board.dto;
 
 import com.leedanbii.board.domain.Board;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -15,7 +15,7 @@ public class BoardDetailResponse {
     private String content;
     private String writerName;
     private String writerUserId;
-    private LocalDateTime createdAt;
+    private OffsetDateTime createdAt;
     private List<CommentResponse> comments;
 
     public static BoardDetailResponse from(Board board) {

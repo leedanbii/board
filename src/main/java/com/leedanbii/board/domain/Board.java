@@ -11,7 +11,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
@@ -43,7 +44,7 @@ public class Board {
 
     @Column(nullable = false, updatable = false)
     @CreationTimestamp
-    private LocalDateTime createdAt;
+    private OffsetDateTime createdAt = OffsetDateTime.now(ZoneOffset.ofHours(9));
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
