@@ -9,7 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -40,9 +40,9 @@ public class Comment {
     @JoinColumn(name = "user_id", nullable = false)
     private User commenter;
 
-    @Column(nullable = false, updatable = false, columnDefinition = "TIMESTAMP")
     @CreationTimestamp
-    private OffsetDateTime createdAt;
+    @Column(nullable = false, updatable = false, columnDefinition = "TIMESTAMP")
+    private LocalDateTime createdAt;
 
     private Comment(String content, Board board, User commenter) {
         content = content.trim();
