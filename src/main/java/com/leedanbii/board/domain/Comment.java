@@ -8,8 +8,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -40,9 +42,13 @@ public class Comment {
     @JoinColumn(name = "user_id", nullable = false)
     private User commenter;
 
-    @CreationTimestamp
-    @Column(nullable = false, updatable = false, columnDefinition = "TIMESTAMP")
-    private LocalDateTime createdAt;
+    @Column(nullable = false, updatable = false)
+    private OffsetDateTime createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = OffsetDateTime.now(ZoneOffset.UTC);
+    }
 
     private Comment(String content, Board board, User commenter) {
         content = content.trim();
