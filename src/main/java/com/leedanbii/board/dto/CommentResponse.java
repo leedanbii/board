@@ -2,6 +2,7 @@ package com.leedanbii.board.dto;
 
 import com.leedanbii.board.domain.Comment;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -20,7 +21,7 @@ public class CommentResponse {
                 comment.getContent(),
                 comment.getCommenter().getUserId(),
                 comment.getCommenter().getName(),
-                comment.getCreatedAt()
+                comment.getCreatedAt().withOffsetSameInstant(ZoneOffset.ofHours(9))
         );
     }
 }

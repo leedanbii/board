@@ -2,6 +2,7 @@ package com.leedanbii.board.dto;
 
 import com.leedanbii.board.domain.Board;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -29,7 +30,8 @@ public class BoardDetailResponse {
                 board.getContent(),
                 board.getWriter().getName(),
                 board.getWriter().getUserId(),
-                board.getCreatedAt(),
+                board.getCreatedAt()
+                        .withOffsetSameInstant(ZoneOffset.ofHours(9)),
                 commentResponses
         );
     }
