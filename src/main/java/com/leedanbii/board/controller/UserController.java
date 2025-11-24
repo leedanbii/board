@@ -22,7 +22,7 @@ public class UserController {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
-            return "/register";
+            return "register";
         }
 
         userService.register(form);
